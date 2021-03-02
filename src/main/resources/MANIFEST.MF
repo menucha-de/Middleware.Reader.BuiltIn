@@ -1,0 +1,34 @@
+Bundle-Name: Ha-VIS Middleware RF-R300 Reader Connector
+Bundle-SymbolicName: havis.middleware.reader.rf-r300-readerconnector
+Bundle-Version: 2.7.0
+Implementation-Version: 2.7
+Bundle-ManifestVersion: 2
+Bundle-Vendor: HARTING IT_SD
+Bundle-Activator: havis.middleware.reader.rf_r300.osgi.Activator
+Import-Package: 
+ havis.device.io,
+ havis.device.io.exception,
+ havis.device.rf,
+ havis.device.rf.capabilities,
+ havis.device.rf.common.util,
+ havis.device.rf.configuration,
+ havis.device.rf.exception,
+ havis.device.rf.tag,
+ havis.device.rf.tag.operation,
+ havis.device.rf.tag.result,
+ havis.middleware.ale.base,
+ havis.middleware.ale.base.exception,
+ havis.middleware.ale.base.message,
+ havis.middleware.ale.base.operation.port,
+ havis.middleware.ale.base.operation.port.result,
+ havis.middleware.ale.base.operation.tag,
+ havis.middleware.ale.base.operation.tag.result,
+ havis.middleware.ale.exit,
+ havis.middleware.ale.reader,
+ havis.middleware.ale.service.rc,
+ havis.middleware.utils.data,
+ havis.util.monitor,
+ org.osgi;resolution:=optional,
+ org.osgi.framework;resolution:=optional,
+ org.osgi.util.tracker;resolution:=optional
+

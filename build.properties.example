@@ -1,0 +1,13 @@
+# Create a copy "build.properties" of this file and change the properties
+
+# API repository URL 
+api.url=http://{Host}/api
+
+# Ivy repository URL 
+ivy.url=http://{Host}/ivy
+
+# compile with debug information
+javac.debug=on
+
+#skip unit tests before publish
+skip.test=false

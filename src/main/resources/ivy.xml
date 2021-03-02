@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+
+	<info organisation="havis/middleware/reader/rf-r" module="rf-r300-readerconnector" default="true" />
+
+	<configurations>
+		<conf name="default" />
+		<conf name="doc" />
+		<conf name="src" />
+		<conf name="deb" />
+	</configurations>
+
+	<publications>
+		<artifact name="havis.middleware.reader.rf-r300-readerconnector" conf="default" />
+		<artifact name="havis.middleware.reader.rf-r300-readerconnector-javadoc" conf="doc" />
+		<artifact name="havis.middleware.reader.rf-r300-readerconnector-sources" conf="src" />
+		<artifact name="havis.middleware.reader.rf-r300-readerconnector" type="deb" conf="deb" />
+	</publications>
+
+	<dependencies>
+		<dependency org="havis/util" name="monitor" rev="${havis.version}" conf="default" />
+	</dependencies>
+
+</ivy-module>

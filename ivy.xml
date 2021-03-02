@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+
+	<info organisation="havis/middleware/reader/rfr300" module="readerconnector" default="true" />
+
+	<configurations>
+		<conf name="default" />		
+		<conf name="test" />
+		<conf name="src" />
+	</configurations>
+
+	<dependencies>
+		<dependency org="havis/middleware" name="ale-api" rev="${havis.version}" conf="default->default,src" />
+		<dependency org="havis/middleware" name="tdt" rev="${havis.version}" conf="default->default,src" />
+		<dependency org="havis/middleware" name="utils" rev="${havis.version}" conf="default->default,src" />
+		<dependency org="havis/util" name="monitor" rev="${havis.version}" conf="default->default,src" />
+		<dependency org="org/jmockit" name="jmockit" rev="${jmockit.version}" conf="test->default" />
+		<dependency org="junit" name="junit" rev="${junit.version}" conf="test->default" />
+		<dependency org="org/osgi" name="org.osgi.core" rev="${osgi.version}" conf="default" />
+		
+		<!-- <dependency org="havis/middleware/reader/rfr" name="readerconnector" rev="${havis.version}" conf="default->default,src" />  -->
+		<!--<dependency org="org/jmockit" name="jmockit-coverage" rev="${jmockit.version}" conf="default" />-->
+		
+		<dependency org="com/nordicid" name="nativeserial-linux-amd64" rev="${nordicid.version}" conf="default" />
+		<dependency org="com/nordicid" name="nurapi" rev="${nordicid.version}" conf="default" />
+		<dependency org="com/nordicid" name="nativeserial" rev="${nordicid.version}" conf="default" />
+		
+		<dependency org="havis/device/rf" name="nur-linux-amd64" rev="${havis.version}" conf="default->default,src" />
+		<dependency org="havis/device/rf" name="api" rev="${havis.version}" conf="default->default,src"/>
+		<dependency org="havis/device/rf" name="common" rev="${havis.version}" conf="default->default,src"/>
+		
+		<dependency org="havis/device/io" name="api" rev="${havis.version}" conf="default->default,src" />		
+		<dependency org="havis/device/io" name="common" rev="${havis.version}" conf="default->default,src"> 
+			<exclude org="com/fasterxml/jackson/core" module="jackson-databind" />
+		</dependency>
+
+		<dependency org="com/fasterxml/jackson/core" name="jackson-core" rev="${jackson.version}" conf="default" />
+		<dependency org="com/fasterxml/jackson/core" name="jackson-databind" rev="${jackson.version}" conf="default" />
+	</dependencies>
+
+</ivy-module>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="havis.middleware.reader.rf-r300-readerconnector" default="publish" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+	<property file="${basedir}/build.properties" />
+	<property name="basename" value="${ant.project.name}" />
+	<property name="build.dir" location="${basedir}/target" />
+	<property name="build.dir.classes" location="${build.dir}/classes" />
+	<property name="doc.dir" location="${build.dir}/doc" />
+	<property name="lib.dir" location="${basedir}/lib" />
+	<property name="resources.dir" location="${basedir}/src/main/resources" />
+	<property name="src.main.dir" location="${basedir}/src/main/java" />
+	<property name="src.test.dir" location="${basedir}/src/test/java" />
+
+	<property file="${resources.dir}/MANIFEST.MF" prefix="manifest" />
+	<property file="${resources.dir}/build.properties" />
+
+	<property name="build.dir.test" location="${build.dir}/test" />
+	<property name="build.dir.test.classes" location="${build.dir.test}/classes" />
+
+	<property name="resources.dir.test.classpath" location="${basedir}/src/test/resources/classpath" />
+
+	<property name="jmockit-coverage-excludes" value="havis\.middleware\.reader\.test\..*" />
+	<property name="jmockit-coverage-outputDir" location="${build.dir.test}/coverage-report" />
+
+	<property name="javac.version" value="8" />
+
+	<path id="build.classpath">
+		<fileset dir="${lib.dir}" />
+	</path>
+
+	<!-- Checks if the build.properties file exists prints an error message if the file does not exist -->
+	<target name="check.build.properties">
+		<condition property="ivy.resolver" else="local">
+			<isset property="ivy.resolver" />
+		</condition>
+		<condition property="skip.test" else="false">
+			<isset property="skip.test" />
+		</condition>
+		<fail message="Missing property 'api.url'. Does 'build.properties' file exist?" unless="api.url" />
+		<fail message="Missing property 'ivy.url'. Does 'build.properties' file exist?" unless="ivy.url" />
+	</target>
+
+	<target name="clean-cache" description="Cleans the ivy cache">
+		<ivy:cleancache />
+	</target>
+
+	<target name="clean" description="Cleans the project.">
+		<delete dir="${build.dir}" />
+		<delete dir="${lib.dir}" />
+	</target>
+
+	<target name="clean-all" depends="clean, clean-cache" description="Cleans the project and ivy cache" />
+
+	<target name="retrieve" depends="check.build.properties">
+		<ivy:retrieve log="quiet" />
+	</target>
+
+	<!-- Compiles the java source files -->
+	<target name="compile" depends="retrieve">
+		<mkdir dir="${build.dir.classes}" />
+		<javac srcdir="${src.main.dir}" destdir="${build.dir.classes}" release="${javac.version}" debug="${javac.debug}" includeantruntime="false">
+			<compilerarg value="-Xlint:deprecation" />
+			<classpath>
+				<!-- build libraries -->
+				<path refid="build.classpath" />
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="jar" depends="compile" description="Builds a JAR file from the project.">
+		<jar jarfile="${build.dir}/${basename}.jar" basedir="${build.dir.classes}" manifest="${resources.dir}/MANIFEST.MF" />
+	</target>
+
+	<target name="jar-doc" description="Builds a javadoc JAR file from the project.">
+		<!-- create javadoc JAR -->
+		<javadoc destdir="${doc.dir}" author="true" version="true" use="true" windowtitle="${javadoc.windowtitle}" doctitle="${javadoc.doctitle}" bottom="${javadoc.buttom}">
+			<packageset dir="${src.main.dir}" defaultexcludes="yes" />
+			<classpath>
+				<path refid="build.classpath" />
+			</classpath>
+			<group title="Packages" packages="havis.middleware.reader.rf_r300.*" />
+			<link offline="true" href="http://docs.oracle.com/javase/7/docs/api/" packagelistURL="${api.url}/javase/7/" />
+		</javadoc>
+		<jar jarfile="${build.dir}/${basename}-javadoc.jar" basedir="${doc.dir}" />
+	</target>
+
+	<target name="jar-src" description="Builds a JAR file containing the sources of the project.">
+		<!-- create sources JAR -->
+		<jar jarfile="${build.dir}/${basename}-sources.jar" basedir="${src.main.dir}" />
+	</target>
+
+	<target name="deb" depends="jar">
+		<copy file="${build.dir}/${basename}.jar" tofile="${build.dir}/deb/opt/havis-apps/bundle/50_${basename}.jar" />
+
+		<copy file="${resources.dir}/deb/DEBIAN/control" tofile="${build.dir}/deb/DEBIAN/control">
+			<filterset begintoken="${" endtoken="}" filtersfile="${resources.dir}/MANIFEST.MF" />
+		</copy>
+
+		<exec executable="fakeroot">
+			<arg value="dpkg" />
+			<arg value="-b" />
+			<arg value="${build.dir}/deb" />
+			<arg value="${build.dir}/${basename}.deb" />
+		</exec>
+	</target>
+
+	<target name="publish" depends="deb, jar-doc, jar-src" description="Publishes the JAR to the repository">
+		<ivy:resolve file="${resources.dir}/ivy.xml" />
+
+		<ivy:publish resolver="${ivy.resolver}" pubrevision="${manifest.Bundle-Version}" status="integration" overwrite="true">
+			<artifacts pattern="${build.dir}/[artifact].[ext]" />
+		</ivy:publish>
+	</target>
+
+	<target name="prepare" depends="compile" unless="${skip.test}">
+		<mkdir dir="${build.dir.test.classes}" />
+		<javac srcdir="${src.test.dir}" destdir="${build.dir.test.classes}" release="${javac.version}" debug="${javac.debug}" includeantruntime="false">
+			<classpath>
+				<path refid="build.classpath" />
+				<path location="${build.dir.classes}" />
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="test" depends="prepare" unless="${skip.test}">
+		<junit printsummary="true" fork="yes" haltonerror="yes" haltonfailure="yes">
+			<jvmarg value="-Djmockit-coverage-excludes=${jmockit-coverage-excludes}" />
+			<jvmarg value="-Djmockit-coverage-outputDir=${jmockit-coverage-outputDir}" />
+			<classpath>
+				<path refid="build.classpath" />
+				<pathelement location="${build.dir.classes}" />
+				<pathelement location="${build.dir.test.classes}" />
+				<pathelement location="${resources.dir.test.classpath}" />
+			</classpath>
+			<formatter type="plain" />
+			<!-- 			<test name="havis.logging.test.LoggingTestSuite" todir="${build.dir.test}" /> -->
+		</junit>
+		<zip zipfile="${build.dir}/${basename}-test.zip" basedir="${build.dir.test}" excludes="classes/**" />
+	</target>
+</project>
