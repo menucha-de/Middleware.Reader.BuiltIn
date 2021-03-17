@@ -11,7 +11,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Publish jar
         id: build
-        uses: peramic/actions/build-stretch@v1
+        uses: menucha-de/actions/build-stretch@v1
         with:
           arch: all
           script: ./mkapp

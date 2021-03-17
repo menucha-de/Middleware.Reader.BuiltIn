@@ -3,7 +3,7 @@ Bundle-SymbolicName: havis.middleware.reader.rf-r300-readerconnector
 Bundle-Version: 2.7.0
 Implementation-Version: 2.7
 Bundle-ManifestVersion: 2
-Bundle-Vendor: HARTING IT_SD
+Bundle-Vendor: Menucha Team <info@menucha.de>
 Bundle-Activator: havis.middleware.reader.rf_r300.osgi.Activator
 Import-Package: 
  havis.device.io,

@@ -203,7 +203,7 @@ public class RF_R300ReaderConnector implements ImmutableReaderConnector {
 			this.ioDevice = ioDevice;
 			this.rfDevice = rfDevice;
 
-			this.deviceCapabilities = new DeviceCapabilities(null, "HARTING Software Development GmbH & Co.KG", "RF-R300", null);
+			this.deviceCapabilities = new DeviceCapabilities(null, "Menucha Team", "RF-R300", null);
 
 			antennas.add((short) 0);
 		}
